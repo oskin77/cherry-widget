@@ -17,23 +17,29 @@
             js.id = o; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs);
         })(window, document, 'script', '_hw', 'https://files.withcherry.com/widgets/widget.js');
 
-        window.addEventListener('load', function() {
-            _hw('init', {
-                debug: false,
-                variables: {
-                    slug: 'olis-skin',
-                    name: "OLIS SKIN",
-                },
-                styles: {
-                    primaryColor: '#c7bdad',
-                    secondaryColor: '#c7bdad10',
-                    fontFamily: 'Montserrat',
-                    button: {
-                        color: '#2e2e2e'
-                    }
-                },
-            }, ["hero", "howitworks", "faq", "calculator"]);
-        });
+        function initCherryWidget() {
+            if (typeof _hw === 'function') {
+                _hw('init', {
+                    debug: true, // Set to true for debugging
+                    variables: {
+                        slug: 'olis-skin',
+                        name: "OLIS SKIN",
+                    },
+                    styles: {
+                        primaryColor: '#c7bdad',
+                        secondaryColor: '#c7bdad10',
+                        fontFamily: 'Montserrat',
+                        button: {
+                            color: '#2e2e2e'
+                        }
+                    },
+                }, ["hero", "howitworks", "faq", "calculator"]);
+            } else {
+                setTimeout(initCherryWidget, 100);
+            }
+        }
+
+        window.addEventListener('load', initCherryWidget);
     </script>
 </body>
 </html>
