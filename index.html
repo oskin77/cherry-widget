@@ -19,46 +19,49 @@
 
         debugLog('Script started');
 
-        (function (w, d, s, o, f, js, fjs) {
-            debugLog('Loader function started');
-            w[o] = w[o] || function () {
-                debugLog('_hw called with: ' + JSON.stringify(arguments));
-                (w[o].q = w[o].q || []).push(arguments);
+        window._hw = window._hw || function() {
+            debugLog('_hw called with: ' + JSON.stringify(arguments));
+            (_hw.q = _hw.q || []).push(arguments);
+        };
+
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            script.onload = callback;
+            script.onerror = function() {
+                debugLog('Error loading script: ' + url);
             };
-            js = d.createElement(s);
-            fjs = d.getElementsByTagName(s)[0];
-            js.id = o;
-            js.src = f;
-            js.async = 1;
-            js.onload = function() {
-                debugLog('Cherry script loaded');
-                initWidget();
-            };
-            js.onerror = function() {
-                debugLog('Error loading Cherry script');
-            };
-            fjs.parentNode.insertBefore(js, fjs);
-            debugLog('Script tag added');
-        })(window, document, 'script', '_hw', 'https://files.withcherry.com/widgets/widget.js');
+            document.head.appendChild(script);
+        }
+
+        loadScript('https://files.withcherry.com/widgets/widget.js', function() {
+            debugLog('Cherry script loaded');
+            initWidget();
+        });
 
         function initWidget() {
             debugLog('Initializing widget');
-            _hw('init', {
-                debug: true,
-                variables: {
-                    slug: 'olis-skin',
-                    name: "OLIS SKIN",
-                },
-                styles: {
-                    primaryColor: '#c7bdad',
-                    secondaryColor: '#c7bdad10',
-                    fontFamily: 'Montserrat',
-                    button: {
-                        color: '#2e2e2e'
-                    }
-                },
-            }, ["hero", "howitworks", "faq", "calculator"]);
-            debugLog('Widget initialization called');
+            try {
+                _hw('init', {
+                    debug: true,
+                    variables: {
+                        slug: 'OLIS SKIN',
+                        name: "OLIS SKIN",
+                    },
+                    styles: {
+                        primaryColor: '#c7bdad',
+                        secondaryColor: '#c7bdad10',
+                        fontFamily: 'Montserrat',
+                        button: {
+                            color: '#2e2e2e'
+                        }
+                    },
+                }, ["hero", "howitworks", "faq", "calculator"]);
+                debugLog('Widget initialization called');
+            } catch (error) {
+                debugLog('Error initializing widget: ' + error.message);
+            }
         }
     </script>
 </body>
