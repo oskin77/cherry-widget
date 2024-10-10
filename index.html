@@ -14,30 +14,32 @@
     <script>
         function debugLog(message) {
             document.getElementById('debug').innerHTML += message + '<br>';
+            console.log(message);
         }
 
         debugLog('Script started');
 
-        window._hw = window._hw || function() {
-            debugLog('_hw function called with: ' + JSON.stringify(arguments));
-            (_hw.q = _hw.q || []).push(arguments);
-        };
-
-        debugLog('_hw function defined');
-
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://files.withcherry.com/widgets/widget.js';
-        script.onload = function() {
-            debugLog('Cherry script loaded');
-            initWidget();
-        };
-        script.onerror = function() {
-            debugLog('Error loading Cherry script');
-        };
-        document.head.appendChild(script);
-
-        debugLog('Script tag added');
+        (function (w, d, s, o, f, js, fjs) {
+            debugLog('Loader function started');
+            w[o] = w[o] || function () {
+                debugLog('_hw called with: ' + JSON.stringify(arguments));
+                (w[o].q = w[o].q || []).push(arguments);
+            };
+            js = d.createElement(s);
+            fjs = d.getElementsByTagName(s)[0];
+            js.id = o;
+            js.src = f;
+            js.async = 1;
+            js.onload = function() {
+                debugLog('Cherry script loaded');
+                initWidget();
+            };
+            js.onerror = function() {
+                debugLog('Error loading Cherry script');
+            };
+            fjs.parentNode.insertBefore(js, fjs);
+            debugLog('Script tag added');
+        })(window, document, 'script', '_hw', 'https://files.withcherry.com/widgets/widget.js');
 
         function initWidget() {
             debugLog('Initializing widget');
@@ -56,7 +58,7 @@
                     }
                 },
             }, ["hero", "howitworks", "faq", "calculator"]);
-            debugLog('Widget initialized');
+            debugLog('Widget initialization called');
         }
     </script>
 </body>
