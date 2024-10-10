@@ -3,43 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cherry Widget</title>
+    <title>Cherry Widget Test</title>
     <style>
         body { background-color: #fffcf0; margin: 0; padding: 0; }
     </style>
 </head>
 <body>
+    <div id="debug"></div>
     <div id="cherry-widget"></div>
     <script>
-        (function (w, d, s, o, f, js, fjs) {
-            w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) };
-            js = d.createElement(s); fjs = d.getElementsByTagName(s)[0];
-            js.id = o; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs);
-        })(window, document, 'script', '_hw', 'https://files.withcherry.com/widgets/widget.js');
-
-        function initCherryWidget() {
-            if (typeof _hw === 'function') {
-                _hw('init', {
-                    debug: true, // Set to true for debugging
-                    variables: {
-                        slug: 'olis-skin',
-                        name: "OLIS SKIN",
-                    },
-                    styles: {
-                        primaryColor: '#c7bdad',
-                        secondaryColor: '#c7bdad10',
-                        fontFamily: 'Montserrat',
-                        button: {
-                            color: '#2e2e2e'
-                        }
-                    },
-                }, ["hero", "howitworks", "faq", "calculator"]);
-            } else {
-                setTimeout(initCherryWidget, 100);
-            }
+        function debugLog(message) {
+            document.getElementById('debug').innerHTML += message + '<br>';
         }
 
-        window.addEventListener('load', initCherryWidget);
+        debugLog('Script started');
+
+        window._hw = window._hw || function() {
+            debugLog('_hw function called with: ' + JSON.stringify(arguments));
+            (_hw.q = _hw.q || []).push(arguments);
+        };
+
+        debugLog('_hw function defined');
+
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://files.withcherry.com/widgets/widget.js';
+        script.onload = function() {
+            debugLog('Cherry script loaded');
+            initWidget();
+        };
+        script.onerror = function() {
+            debugLog('Error loading Cherry script');
+        };
+        document.head.appendChild(script);
+
+        debugLog('Script tag added');
+
+        function initWidget() {
+            debugLog('Initializing widget');
+            _hw('init', {
+                debug: true,
+                variables: {
+                    slug: 'olis-skin',
+                    name: "OLIS SKIN",
+                },
+                styles: {
+                    primaryColor: '#c7bdad',
+                    secondaryColor: '#c7bdad10',
+                    fontFamily: 'Montserrat',
+                    button: {
+                        color: '#2e2e2e'
+                    }
+                },
+            }, ["hero", "howitworks", "faq", "calculator"]);
+            debugLog('Widget initialized');
+        }
     </script>
 </body>
 </html>
